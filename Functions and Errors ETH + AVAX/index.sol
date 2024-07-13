@@ -12,15 +12,17 @@ contract FunctionsAndErrors {
 
     // Function to deposit funds with a require statement
     function deposit(uint256 amount) public payable {
-        require(msg.value == amount, "Amount mismatch");
+        require(
+            msg.value == amount,
+            "Amount does not match, please try again."
+        );
         balance += amount;
     }
 
     // Function to withdraw funds with a revert statement
     function withdraw(uint256 amount) public {
-        if (amount > balance) {
-            revert("Insufficient balance");
-        }
+        if (amount > balance) revert("There are no enough balance");
+
         balance -= amount;
         payable(msg.sender).transfer(amount);
     }
@@ -33,7 +35,7 @@ contract FunctionsAndErrors {
 
     // Function to change the owner with a require statement
     function changeOwner(address newOwner) public {
-        require(msg.sender == owner, "Only owner can change owner");
+        require(msg.sender == owner, "Invalid owner, the sender is not owner");
         owner = newOwner;
     }
 }
