@@ -2,7 +2,6 @@
 pragma solidity 0.8.19;
 
 contract MyToken {
-    // Public variables here
     string public name; // Token Name
     string public symbol; // Token Abbreviation
     uint256 public totalSupply; // Total Supply
