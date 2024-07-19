@@ -1,41 +1,48 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-contract FunctionsAndErrors {
-    address public owner;
-    uint256 public balance;
+contract EnhancedFunctionsAndErrors {
+    address public contractOwner;
+    uint256 public contractBalance;
 
     constructor() {
-        owner = msg.sender;
-        balance = 0;
-    }
-
-    // Function to deposit funds with a require statement
-    function deposit(uint256 amount) public payable {
-        require(
-            msg.value == amount,
-            "Amount does not match, please try again."
-        );
-        balance += amount;
-    }
-
-    // Function to withdraw funds with a revert statement
-    function withdraw(uint256 amount) public {
-        if (amount > balance) revert("There are no enough balance");
-
-        balance -= amount;
-        payable(msg.sender).transfer(amount);
+        contractOwner = msg.sender;
+        contractBalance = 0;
     }
 
     // Function to check balance with an assert statement
-    function checkBalance() public view returns (uint256) {
-        assert(balance >= 0);
-        return balance;
+    function getBalance() public view returns (uint256) {
+        // Check Balance
+        assert(contractBalance >= 0);
+        return contractBalance;
+    }
+
+    // Function to deposit funds with a require statement
+    function depositFunds(uint256 amt) public payable {
+        // Additional check if specified amount matches the value
+        require(
+            msg.value == amt,
+            "Sent amount does not match the specified amount."
+        );
+        contractBalance += amt;
+    }
+
+    // Function to withdraw funds with a revert statement
+    function withdrawFunds(uint256 amt) public {
+        // Checks if user have enough balance to withdraw
+        if (amt > contractBalance)
+            revert("You do not have enough balance to withdraw.");
+
+        contractBalance -= amt;
+        payable(msg.sender).transfer(amt);
     }
 
     // Function to change the owner with a require statement
-    function changeOwner(address newOwner) public {
-        require(msg.sender == owner, "Invalid owner, the sender is not owner");
-        owner = newOwner;
+    function updateOwner(address newOwner) public {
+        require(
+            msg.sender == contractOwner,
+            "You are not the owner, Only the current owner can change the ownership."
+        );
+        contractOwner = newOwner;
     }
 }
